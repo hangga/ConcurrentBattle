@@ -34,10 +34,12 @@ class ConcurrentUnitTest {
 
     @Test
     fun `Test coroutine  in httpRequest`(): Unit = runBlocking {
-        val (_, executionTime) = makeHttpRequestAsync()
+        /*val (_, executionTime) = makeHttpRequestAsync()
         println("Data Processing")
         println("=================================")
         //println("Response: $result")
+        println("Kotlin Execution Time: $executionTime ms")*/
+        val executionTime = makeHttpRequestAsync()
         println("Kotlin Execution Time: $executionTime ms")
     }
 

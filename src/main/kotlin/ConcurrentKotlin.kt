@@ -39,7 +39,7 @@ suspend fun performDataProcessingKotlin(): Long {
             async {
                 // Simulasi pemrosesan data
                 val result = data.replace("_data", "-").uppercase(Locale.getDefault())
-                println("Kotlin : Data processed: $result")
+                println("Coroutine : Data processed: $result")
             }
         }
         jobs.awaitAll()
@@ -49,7 +49,28 @@ suspend fun performDataProcessingKotlin(): Long {
     return endTime - startTime
 }
 
-suspend fun makeHttpRequestAsync(): Pair<String, Long> = withContext(Dispatchers.IO) {
+suspend fun makeHttpRequestAsync(): Long = withContext(Dispatchers.IO) {
+    val uri = URI.create(Const.DUMMY_API)
+    val client = HttpClient.newHttpClient()
+    val request = HttpRequest.newBuilder(uri).build()
+
+    return@withContext try {
+        var responseString: String
+        measureTimeMillis {
+            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+            responseString = response.body()
+            // Do something with the response if needed
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        0L
+    } finally {
+        // Tidak perlu menutup HttpClient di sini, karena HttpClient.newHttpClient() tidak membuat sumber daya yang perlu ditutup secara manual.
+    }
+}
+
+
+/*suspend fun makeHttpRequestAsync(): Pair<String, Long> = withContext(Dispatchers.IO) {
     val uri = URI.create(Const.DUMMY_API)
     val client = HttpClient.newHttpClient()
     val request = HttpRequest.newBuilder(uri).build()
@@ -68,4 +89,4 @@ suspend fun makeHttpRequestAsync(): Pair<String, Long> = withContext(Dispatchers
     } finally {
         // Tidak perlu menutup HttpClient di sini, karena HttpClient.newHttpClient() tidak membuat sumber daya yang perlu ditutup secara manual.
     }
-}
+}*/
