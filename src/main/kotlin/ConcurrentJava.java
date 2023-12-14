@@ -12,18 +12,22 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
+// https://chat.openai.com/share/9b09b6a2-8ea7-4e1a-9b00-140103c598e0
+
+
 public class ConcurrentJava {
-    public long performSingleFileOperationJava() {
+
+    public long performSingleFileOperationVirtualThread() {
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < 5; i++) {
-            CompletableFuture.runAsync(() -> {
+            Thread.ofVirtual().start(() -> {
                 try {
                     // Simulate disk latency with file writing
                     Path filePath = Path.of("example.txt");
                     byte[] data = Const.LOREM_IPSUM.getBytes();
                     Files.write(filePath, data, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-                    //System.out.println("File operation completed by virtual thread");
+                    // System.out.println("File operation completed by virtual thread");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -34,37 +38,54 @@ public class ConcurrentJava {
         return endTime - startTime;
     }
 
-    // Java menggunakan CompletableFuture
-    public long performDataProcessingJava() {
+    public long performDataProcessingVirtualThread() {
         long startTime = System.currentTimeMillis();
 
         List<String> dataList = Arrays.asList("dummy_data1", "dummy_data2", "dummy_data3", "dummy_data4", "dummy_data5");
 
-        CompletableFuture<Void> allOf = CompletableFuture.allOf(dataList.stream().map(data -> CompletableFuture.runAsync(() -> {
-            // Simulasi pemrosesan data
-            String result = data.replace("_data", "-").toUpperCase();
-            System.out.println("Java Data processed: " + result);
-        })).toArray(CompletableFuture[]::new));
-        allOf.join();
+        for (String data : dataList) {
+            Thread.ofVirtual().start(() -> {
+                // Simulasi pemrosesan data
+                String result = data.replace("_data", "-").toUpperCase();
+                System.out.println("Virtual Thread Data processed: " + result);
+            });
+        }
 
         long endTime = System.currentTimeMillis();
         return endTime - startTime;
     }
 
-    public CompletableFuture<Pair<String, Long>> makeHttpRequestAsync() {
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(Const.DUMMY_API)).build();
+    public Pair<String, Long> makeHttpRequest() {
+        CompletableFuture<Pair<String, Long>> futureResult = new CompletableFuture<>();
 
-        long startTime = System.currentTimeMillis();
+        Thread.ofVirtual().start(() -> {
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(Const.DUMMY_API)).build();
 
-        return httpClient.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString()).thenApply(response -> {
-            long endTime = System.currentTimeMillis();
-            long executionTime = endTime - startTime;
-            return new Pair<>(response.body(), executionTime);
-        }).exceptionally(throwable -> {
-            System.err.println("Error occurred: " + throwable.getMessage());
-            return new Pair<>("", 0L);
+            long startTime = System.currentTimeMillis();
+
+            try {
+                HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+                long endTime = System.currentTimeMillis();
+                long executionTime = endTime - startTime;
+
+                futureResult.complete(new Pair<>(response.body(), executionTime));
+            } catch (Exception e) {
+                System.err.println("Error occurred: " + e.getMessage());
+                futureResult.completeExceptionally(e);
+            }
         });
+
+        // Menggunakan join untuk menunggu hasil (secara virtual)
+        CompletableFuture.runAsync(Thread::onSpinWait).join();
+
+        try {
+            return futureResult.get();
+        } catch (Exception e) {
+            System.err.println("Error occurred while getting result: " + e.getMessage());
+            return new Pair<>("", 0L);
+        }
     }
 
 }

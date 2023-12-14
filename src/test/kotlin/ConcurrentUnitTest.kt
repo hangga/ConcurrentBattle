@@ -3,7 +3,6 @@ import id.hangga.performDataProcessingKotlin
 import id.hangga.performSingleFileOperation
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import java.util.concurrent.CompletableFuture
 import kotlin.time.Duration.Companion.milliseconds
 
 class ConcurrentUnitTest {
@@ -15,7 +14,8 @@ class ConcurrentUnitTest {
 
     @Test
     fun `Test virtual thread in write file`() {
-        val javaTotalTime = ConcurrentJava().performSingleFileOperationJava()
+        //val javaTotalTime = ConcurrentJava().performSingleFileOperationJava()
+        val javaTotalTime = ConcurrentJava().performSingleFileOperationVirtualThread()
         println("Java : $javaTotalTime milliseconds")
     }
 
@@ -27,13 +27,14 @@ class ConcurrentUnitTest {
 
     @Test
     fun `Test virtual thread  data process`() = runBlocking {
-        val javaTotalTime = ConcurrentJava().performDataProcessingJava()
+        //val javaTotalTime = ConcurrentJava().performDataProcessingJava()
+        val javaTotalTime = ConcurrentJava().performDataProcessingVirtualThread()
         println("Java : $javaTotalTime milliseconds")
     }
 
     @Test
     fun `Test coroutine  in httpRequest`(): Unit = runBlocking {
-        val (result, executionTime) = makeHttpRequestAsync()
+        val (_, executionTime) = makeHttpRequestAsync()
         println("Data Processing")
         println("=================================")
         //println("Response: $result")
@@ -41,13 +42,8 @@ class ConcurrentUnitTest {
     }
 
     @Test
-    fun `Test virtual thread in httpRequest`(): Unit = runBlocking {
-        val completableFuture: CompletableFuture<Pair<String, Long>> = ConcurrentJava().makeHttpRequestAsync()
-
-        // Blocking until the CompletableFuture is completed
-        val response: Pair<String, Long> = completableFuture.join()
-
-        //println("Response: ${response.first}")
-        println("Java Execution Time: ${response.second.milliseconds }")
+    fun `Test virtual thread in httpRequest`() = runBlocking {
+        val result: Pair<String, Long> = ConcurrentJava().makeHttpRequest()
+        println("Java Execution Time: ${result.second.milliseconds}")
     }
 }
