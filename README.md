@@ -1,3 +1,16 @@
+## Execution Time Comparison: Kotlin Coroutine vs Thread.ofVirtual Java
+
+| Task           | Language | Execution Time |
+|----------------|----------|----------------|
+| Write File     | Java     | 568 milliseconds |
+| Write File     | Kotlin   | 69 milliseconds  |
+| HttpRequest    | Kotlin   | 2060 milliseconds |
+| HttpRequest    | Java     | 610 milliseconds |
+| Data Process   | Kotlin   | 51 milliseconds  |
+| Data Process   | Java     | 2 milliseconds   |
+
+The table shows the execution time for various tasks in milliseconds. As observed, the times may vary significantly between Kotlin and Java for different operations.
+
 ## Thread.ofVirtual vs Kotlin Coroutine Comparison
 
 | Aspect                  | `Thread.ofVirtual`                                               | `Kotlin Coroutine`                                             |
