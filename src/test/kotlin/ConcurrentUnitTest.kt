@@ -9,7 +9,7 @@ class ConcurrentUnitTest {
     @Test
     fun `Test coroutin in write file`() {
         val kotlinTotalTime = performSingleFileOperation()
-        println("write file | Java : $kotlinTotalTime milliseconds")
+        println("write file | Kotlin : $kotlinTotalTime milliseconds")
     }
 
     @Test
