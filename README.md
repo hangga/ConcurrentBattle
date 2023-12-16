@@ -1,4 +1,4 @@
-## Thread.ofVirtual vs Kotlin Coroutine Comparison
+## Thread.ofVirtual vs Kotlin Coroutine Comparison (Pros Cons)
 
 | Aspect                  | `Thread.ofVirtual`                                               | `Kotlin Coroutine`                                             |
 |-------------------------|------------------------------------------------------------------|----------------------------------------------------------------|
@@ -9,6 +9,25 @@
 | **Code Complexity**     | Allows for cleaner and simpler code compared to native threads, but still requires manual management | Enables writing more concise and understandable code, reducing callback hell and improving code structure |
 
 This table provides a general overview, and the best decision can vary depending on project requirements and developer preferences. Before choosing a concurrency mechanism, it is advisable to conduct performance testing in specific use cases to gain a better understanding of their performance in your application context.
+
+## Comparison between Kotlin Coroutine and Thread.ofVirtual (Concept)
+
+| Concept                  | Kotlin Coroutine                              | Thread.ofVirtual                                   |
+|--------------------------|-----------------------------------------------|----------------------------------------------------|
+| **Execution Scope**      | Coroutine Scope                               | Thread Pool (ExecutorService)                      |
+| **Execution Mechanism**  | Coroutine Builder (e.g., `launch`, `async`)   | `Thread.ofVirtual` in Java                          |
+| **Suspending Functions** | Suspending Function                           | Not applicable (focused on Runnable)               |
+| **Dispatcher/Executor**  | Coroutine Dispatcher (e.g., `Dispatchers.IO`, `Dispatchers.Main`) | Thread Pool (ExecutorService)                  |
+| **Coroutine Context**    | Coroutine Context                             | Not applicable (focused on Runnable)               |
+| **Execution Lightweightness** | Lighter and more efficient               | Heavier compared to Coroutine                      |
+| **Asynchronous Aspect**   | Naturally supports (via suspending functions)| Depends on the usage of CompletableFuture          |
+| **State Management**     | Flexible, can be stateless or stateful        | Stateful (thread has its own state)                |
+| **Concurrency vs Parallelism** | Suitable for concurrency (managing multiple tasks on a single thread) | More focused on parallelism (simultaneous execution on multiple threads) |
+| **Coroutine Coordination**| Built-in mechanisms like `async/await`       | Requires external mechanisms like `CompletableFuture` |
+| **Abstraction Level**    | High, provides good abstraction              | Low, requires more manual control                  |
+
+> Note: This comparison is intended to provide a general overview. The choice between Kotlin Coroutine and Thread.ofVirtual depends on the specific context and requirements of your project.
+
 
 ## Execution Time Comparison: Kotlin Coroutine vs Thread.ofVirtual Java
 
@@ -25,4 +44,4 @@ If you use a different environment than me, the results will likely be different
 | Http Request       | Java   | Thread.ofVirtual()   | 603 ms          |
 
 
-The table shows the execution time for various tasks in milliseconds. As observed, the times may vary significantly between Kotlin and Java for different operations.
+> The table shows the execution time for various tasks in milliseconds. As observed, the times may vary significantly between Kotlin and Java for different operations.
