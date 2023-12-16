@@ -15,13 +15,14 @@ This table provides a general overview, and the best decision can vary depending
 Test results are relative depending on the environment you use. Incidentally, I use an Intel Core i5 machine with 16 GB RAM, Linux OS (Arch Btw).
 If you use a different environment than me, the results will likely be different.
 
-| Task           | Approach          | Execution Time    |
-|----------------|-------------------|-------------------|
-| Write File     | Kotlin Coroutine  | 243 milliseconds  |
-| Write File     | Thread.ofVirtual  | 20 milliseconds   |
-| HttpRequest    | Kotlin Coroutine  | 2060 milliseconds |
-| HttpRequest    | Thread.ofVirtual  | 610 milliseconds  |
-| Data Process   | Kotlin Coroutine  | 51 milliseconds   |
-| Data Process   | Thread.ofVirtual  | 2 milliseconds    |
+| Task               | Lang   | Approach              | Execution Time |
+|--------------------|--------|-----------------------|-----------------|
+| Write File         | Kotlin | Coroutine            | 33 ms           |
+| Write File         | Java   | Thread.ofVirtual()   | 9 ms            |
+| Data Processing    | Kotlin | Coroutine            | 32 ms           |
+| Data Processing    | Java   | Thread.ofVirtual()   | 1 ms            |
+| Http Request       | Kotlin | Coroutine            | 1114 ms         |
+| Http Request       | Java   | Thread.ofVirtual()   | 603 ms          |
+
 
 The table shows the execution time for various tasks in milliseconds. As observed, the times may vary significantly between Kotlin and Java for different operations.

@@ -27,7 +27,7 @@ public class ConcurrentJava {
                     Path filePath = Path.of("example.txt");
                     byte[] data = Const.LOREM_IPSUM.getBytes();
                     Files.write(filePath, data, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-                    // System.out.println("File operation completed by virtual thread");
+                    // //System.out.println("File operation completed by virtual thread");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -47,7 +47,7 @@ public class ConcurrentJava {
             Thread.ofVirtual().start(() -> {
                 // Simulasi pemrosesan data
                 String result = data.replace("_data", "-").toUpperCase();
-                System.out.println("Virtual Thread Data processed: " + result);
+                ////System.out.println("Virtual Thread Data processed: " + result);
             });
         }
 

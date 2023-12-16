@@ -21,7 +21,7 @@ fun performSingleFileOperation(): Long {
                 Files.write(
                     filePath, Const.LOREM_IPSUM.toByteArray(), StandardOpenOption.CREATE, StandardOpenOption.APPEND
                 )
-                //println("File operation completed by coroutine")
+                ////println("File operation completed by coroutine")
             }
             job.await()
         }
@@ -39,7 +39,7 @@ suspend fun performDataProcessingKotlin(): Long {
             async {
                 // Simulasi pemrosesan data
                 val result = data.replace("_data", "-").uppercase(Locale.getDefault())
-                println("Coroutine : Data processed: $result")
+                //println("Coroutine : Data processed: $result")
             }
         }
         jobs.awaitAll()
@@ -80,7 +80,7 @@ suspend fun makeHttpRequestAsync(): Long = withContext(Dispatchers.IO) {
         val executionTime = measureTimeMillis {
             val response = client.send(request, HttpResponse.BodyHandlers.ofString())
             responseString = response.body()
-            //println("Request completed in ${executionTime}ms")
+            ////println("Request completed in ${executionTime}ms")
         }
         Pair(responseString, executionTime)
     } catch (e: Exception) {
